@@ -4,12 +4,13 @@ import './App.css';
 
 import { Nav } from "react-bootstrap"
 
-import Login from "./containers/Login";
+import Login from "./components/Login";
+import Logup from "./components/Logup";
 
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-//import Gun from 'gun/gun'
-//var gun = Gun(['http://localhost:8765/gun'])
+import Gun from 'gun/gun'
+var gun = Gun(['http://localhost:8765/gun'])
 
 
 function Home() {
@@ -64,6 +65,11 @@ function App() {
 
                 <Route exact path="/" component={Home} />
                 <Route exact path="/login" component={Login} />
+                <Route
+                    exact
+                    path='/logup'
+                    render={(props) => <Logup {...props} gun={gun} />}
+                />
                 <Route path="/about" component={About} />
             </Router>
         </div>

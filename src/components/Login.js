@@ -24,13 +24,18 @@ export default class Login extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
+        console.log("username:", this.state.username)
+        console.log("password:", this.state.password)
+        var user = this.props.gun.user()
+        var result = user.auth(this.state.username, this.state.password)
+        console.log("result:", result)
     }
 
     render() {
         return (
             <div className="Login">
                 <form onSubmit={this.handleSubmit}>
-                    <FormGroup controlId="username" bsSize="large">
+                    <FormGroup controlId="username">
                         <FormControl
                             autoFocus
                             type="text"
@@ -39,7 +44,7 @@ export default class Login extends Component {
                             onChange={this.handleChange}
                         />
                     </FormGroup>
-                    <FormGroup controlId="password" bsSize="large">
+                    <FormGroup controlId="password">
                         <FormControl
                             placeholder="Password" 
                             value={this.state.password}
@@ -49,11 +54,10 @@ export default class Login extends Component {
                     </FormGroup>
                     <Button
                         block
-                        bsSize="large"
                         disabled={!this.validateForm()}
                         type="submit"
                     >
-                        Login
+                        Log in
                     </Button>
                 </form>
             </div>
