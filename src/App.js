@@ -10,8 +10,8 @@ import Logup from "./components/Logup";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import Gun from 'gun/gun'
+require('gun/sea') // matters if you want to use gun.user()
 var gun = Gun(['http://localhost:8765/gun'])
-
 
 function Home() {
     return (
@@ -64,11 +64,21 @@ function App() {
                 </Nav>
 
                 <Route exact path="/" component={Home} />
-                <Route exact path="/login" component={Login} />
+                <Route
+                    exact
+                    path='/login'
+                    render={(props) => <Login
+                        {...props}
+                        gun={gun}
+                    />}
+                />
                 <Route
                     exact
                     path='/logup'
-                    render={(props) => <Logup {...props} gun={gun} />}
+                    render={(props) => <Logup
+                        {...props}
+                        gun={gun}
+                    />}
                 />
                 <Route path="/about" component={About} />
             </Router>

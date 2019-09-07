@@ -26,9 +26,18 @@ export default class Login extends Component {
         event.preventDefault();
         console.log("username:", this.state.username)
         console.log("password:", this.state.password)
-        var user = this.props.gun.user()
-        var result = user.auth(this.state.username, this.state.password)
-        console.log("result:", result)
+
+        var gun = this.props.gun
+        var user = gun.user()
+
+        user.auth(this.state.username, this.state.password, (acknowledgment) => {
+            if ("id" in acknowledgment) {
+                alert("Sign In successfully!")
+                this.props.history.push("/")
+            } else if ("err" in acknowledgment) {
+                alert(acknowledgment.err)
+            }
+        })
     }
 
     render() {

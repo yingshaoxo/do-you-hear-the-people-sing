@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Button, FormGroup, FormControl } from "react-bootstrap";
 import "./Logup.css";
 
+import { Route, Redirect } from 'react-router'
+
 export default class Logup extends Component {
     constructor(props) {
         super(props);
@@ -26,9 +28,18 @@ export default class Logup extends Component {
         event.preventDefault();
         console.log("username:", this.state.username)
         console.log("password:", this.state.password)
-        console.log(this.props)
-        var user = this.props.gun.user()
-        user.create(this.state.username, this.state.password)
+
+        var gun = this.props.gun
+        var user = gun.user()
+
+        user.create(this.state.username, this.state.password, (acknowledgment) => {
+            if ("ok" in acknowledgment) {
+                alert("Sign Up successfully!")
+                this.props.history.push("/login")
+            } else if ("err" in acknowledgment) {
+                alert(acknowledgment.err)
+            }
+        })
     }
 
     render() {
@@ -39,14 +50,14 @@ export default class Logup extends Component {
                         <FormControl
                             autoFocus
                             type="text"
-                            placeholder="Username" 
+                            placeholder="Username"
                             value={this.state.username}
                             onChange={this.handleChange}
                         />
                     </FormGroup>
                     <FormGroup controlId="password">
                         <FormControl
-                            placeholder="Password" 
+                            placeholder="Password"
                             value={this.state.password}
                             onChange={this.handleChange}
                             type="password"
