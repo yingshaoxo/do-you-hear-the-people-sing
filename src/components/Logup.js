@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Button, FormGroup, FormControl } from "react-bootstrap";
 import "./Logup.css";
 
-import { Route, Redirect } from 'react-router'
 
 export default class Logup extends Component {
     constructor(props) {
@@ -29,11 +28,12 @@ export default class Logup extends Component {
         console.log("username:", this.state.username)
         console.log("password:", this.state.password)
 
-        var gun = this.props.gun
-        var user = gun.user()
+        var user = this.props.user
 
         user.create(this.state.username, this.state.password, (acknowledgment) => {
             if ("ok" in acknowledgment) {
+                window.localStorage.setItem('username', this.state.username)
+                window.localStorage.setItem('password', this.state.password)
                 alert("Sign Up successfully!")
                 this.props.history.push("/login")
             } else if ("err" in acknowledgment) {

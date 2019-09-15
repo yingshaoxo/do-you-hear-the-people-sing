@@ -27,11 +27,17 @@ export default class Login extends Component {
         console.log("username:", this.state.username)
         console.log("password:", this.state.password)
 
-        var gun = this.props.gun
-        var user = gun.user()
+        var user = this.props.user
+        var set_state = this.props.set_state
 
         user.auth(this.state.username, this.state.password, (acknowledgment) => {
             if ("id" in acknowledgment) {
+                //window.localStorage.setItem('user_public_key', acknowledgment.get)
+                window.localStorage.setItem('username', this.state.username)
+                window.localStorage.setItem('password', this.state.password)
+                set_state({
+                    loggedIn: true
+                })
                 alert("Sign In successfully!")
                 this.props.history.push("/")
             } else if ("err" in acknowledgment) {
@@ -48,14 +54,14 @@ export default class Login extends Component {
                         <FormControl
                             autoFocus
                             type="text"
-                            placeholder="Username" 
+                            placeholder="Username"
                             value={this.state.username}
                             onChange={this.handleChange}
                         />
                     </FormGroup>
                     <FormGroup controlId="password">
                         <FormControl
-                            placeholder="Password" 
+                            placeholder="Password"
                             value={this.state.password}
                             onChange={this.handleChange}
                             type="password"
