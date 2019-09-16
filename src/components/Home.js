@@ -69,8 +69,8 @@ export default class Home extends Component {
                     </div>
                 )
                 each_row = []
-                color = colors.getRandom()
             }
+            color = colors.getRandom()
             each_row.push(
                 <MyCard
                     header={item.header}

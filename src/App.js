@@ -91,9 +91,11 @@ class App extends Component {
         }
     }
 
-    render() {
+    componentDidMount() {
         this.auto_login_if_possible()
+    }
 
+    render() {
         return (
             <div className="App">
                 <Router>
@@ -113,7 +115,7 @@ class App extends Component {
                             <DropdownButton
                                 size="sm"
                                 title="Account"
-                                variant="success"
+                                variant="light"
                                 id="dropdown-variants-success"
                                 key='account'
                             >
