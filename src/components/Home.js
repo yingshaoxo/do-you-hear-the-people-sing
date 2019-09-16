@@ -2,6 +2,36 @@ import React, { Component } from "react";
 import { Card, Button, FormGroup, FormControl } from "react-bootstrap";
 import "./Home.css";
 
+import { makeStyles } from '@material-ui/core/styles';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+
+
+const useStyles = makeStyles(theme => ({
+    fab: {
+        margin: 0,
+        top: 'auto',
+        bottom: theme.spacing(2),
+        right: theme.spacing(2),
+        left: 'auto',
+        position: 'fixed',
+    }
+}));
+
+function FloatingActionButtons() {
+    const classes = useStyles();
+
+    return (
+        <div>
+            <Fab size="large" color="warning" aria-label="add" className={classes.fab}>
+                <AddIcon />
+            </Fab>
+        </div>
+    );
+}
 
 class MyCard extends Component {
     constructor(props) {
@@ -11,13 +41,18 @@ class MyCard extends Component {
     render() {
         return (
             <div class="col-md">
-                <br/>
+                <br />
                 <Card bg={this.props.bg_color} text="white">
                     <Card.Header>{this.props.header}</Card.Header>
                     <Card.Body>
                         <Card.Text>
                             {this.props.text}
                         </Card.Text>
+                        <br />
+                        {
+                        //<ThumbUpIcon style={{ marginRight: "28%" }}>up</ThumbUpIcon>
+                        //<ThumbDownIcon>down</ThumbDownIcon>
+                        }
                     </Card.Body>
                 </Card>
             </div>
@@ -34,7 +69,7 @@ export default class Home extends Component {
 
         this.state = {
             said: [
-                {text: "We are humans, not some kind of animal."}
+                { text: "We are humans, not some kind of animal." }
             ]
         }
 
@@ -42,15 +77,15 @@ export default class Home extends Component {
 
     get_cards = () => {
         let said = []
-        for (let i =0; i <= 30; i++) {
+        for (let i = 0; i <= 30; i++) {
             said.push(
-                {text: "We are humans, not some kind of animal."}
+                { text: "We are humans, not some kind of animal." }
             );
         }
 
-        Array.prototype.getRandom= function(cut){
-            var i= Math.floor(Math.random()*this.length);
-            if(cut && i in this){
+        Array.prototype.getRandom = function (cut) {
+            var i = Math.floor(Math.random() * this.length);
+            if (cut && i in this) {
                 return this.splice(i, 1)[0];
             }
             return this[i];
@@ -95,13 +130,16 @@ export default class Home extends Component {
         return (
             <div className="App-body">
                 <p className="small">
-                    {this.get_state().loggedIn? '': ''}
+                    {this.get_state().loggedIn ? '' : ''}
                 </p>
 
                 <div class="container">
                     {this.get_cards()}
-                    <br/>
+                    <br />
                 </div>
+
+                <FloatingActionButtons>
+                </FloatingActionButtons>
             </div>
         )
     }
