@@ -24,7 +24,7 @@ class InputWindow extends Component {
         });
     }
 
-    handle_done = () => {
+    handle_send = () => {
         this.props.disable_input_box()
 
         if (this.state.input_text != "") {
@@ -36,7 +36,7 @@ class InputWindow extends Component {
     render() {
         return (
             <div>
-                <Modal show={this.props.show_input_box} onHide={this.props.disable_input_box}>
+                <Modal centered show={this.props.show_input_box} onHide={this.props.disable_input_box}>
                     <Modal.Header closeButton>
                         <Modal.Title>What you wanna say?</Modal.Title>
                     </Modal.Header>
@@ -48,8 +48,8 @@ class InputWindow extends Component {
                         </InputGroup>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="primary" onClick={this.handle_done}>
-                            Done
+                        <Button variant="primary" onClick={this.handle_send}>
+                            Send
                         </Button>
                     </Modal.Footer>
                 </Modal>
