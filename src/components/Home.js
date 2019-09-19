@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, FormGroup, FormControl } from "react-bootstrap";
+import { Card, Button, FormGroup, FormControl, Modal, InputGroup } from "react-bootstrap";
 import "./Home.css";
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,6 +9,54 @@ import AddIcon from '@material-ui/icons/Add';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 
+class InputWindow extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            input_text: "",
+        };
+    }
+
+    handle_input = (event) => {
+        this.setState({
+            input_text: event.target.value.trim()
+        });
+    }
+
+    handle_done = () => {
+        this.props.disable_input_box()
+
+        if (this.state.input_text != "") {
+            // do something
+            console.log(this.state.input_text)
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                <Modal show={this.props.show_input_box} onHide={this.props.disable_input_box}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>What you wanna say?</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <InputGroup>
+                            <FormControl autoFocus as="textarea"
+                                onChange={ this.handle_input }
+                            />
+                        </InputGroup>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={this.handle_done}>
+                            Done
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+        );
+    }
+}
 
 const useStyles = makeStyles(theme => ({
     fab: {
@@ -21,12 +69,18 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function FloatingActionButtons() {
+function FloatingActionButtons(props) {
     const classes = useStyles();
 
     return (
         <div>
-            <Fab size="large" color="warning" aria-label="add" className={classes.fab}>
+            <Fab
+                size="large"
+                color="warning"
+                aria-label="add"
+                className={classes.fab}
+                onClick={props.enable_input_box}
+            >
                 <AddIcon />
             </Fab>
         </div>
@@ -50,8 +104,8 @@ class MyCard extends Component {
                         </Card.Text>
                         <br />
                         {
-                        //<ThumbUpIcon style={{ marginRight: "28%" }}>up</ThumbUpIcon>
-                        //<ThumbDownIcon>down</ThumbDownIcon>
+                            //<ThumbUpIcon style={{ marginRight: "28%" }}>up</ThumbUpIcon>
+                            //<ThumbDownIcon>down</ThumbDownIcon>
                         }
                     </Card.Body>
                 </Card>
@@ -70,9 +124,22 @@ export default class Home extends Component {
         this.state = {
             said: [
                 { text: "We are humans, not some kind of animal." }
-            ]
+            ],
+            show_input_box: false,
         }
 
+    }
+
+    enable_input_box = () => {
+        this.setState({
+            show_input_box: true
+        })
+    }
+
+    disable_input_box = () => {
+        this.setState({
+            show_input_box: false
+        })
     }
 
     get_cards = () => {
@@ -138,8 +205,18 @@ export default class Home extends Component {
                     <br />
                 </div>
 
-                <FloatingActionButtons>
+                <FloatingActionButtons
+                    enable_input_box={this.enable_input_box}
+                    disable_input_box={this.disable_input_box}
+                >
                 </FloatingActionButtons>
+
+                <InputWindow
+                    show_input_box={this.state.show_input_box}
+                    enable_input_box={this.enable_input_box}
+                    disable_input_box={this.disable_input_box}
+                >
+                </InputWindow>
             </div>
         )
     }
