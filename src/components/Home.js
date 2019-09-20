@@ -29,7 +29,8 @@ class InputWindow extends Component {
 
         if (this.state.input_text != "") {
             // do something
-            console.log(this.state.input_text)
+            //console.log(this.state.input_text)
+            this.props.add_string_to_node(this.state.input_text, 0)
         }
     }
 
@@ -76,7 +77,7 @@ function FloatingActionButtons(props) {
         <div>
             <Fab
                 size="large"
-                color="warning"
+                color="default"
                 aria-label="add"
                 className={classes.fab}
                 onClick={props.enable_input_box}
@@ -94,7 +95,7 @@ class MyCard extends Component {
 
     render() {
         return (
-            <div class="col-md">
+            <div className="col-md">
                 <br />
                 <Card bg={this.props.bg_color} text="white">
                     <Card.Header>{this.props.header}</Card.Header>
@@ -126,14 +127,16 @@ export default class Home extends Component {
                 { text: "We are humans, not some kind of animal." }
             ],
             show_input_box: false,
+            user: this.props.user,
         }
-
     }
 
     enable_input_box = () => {
-        this.setState({
-            show_input_box: true
-        })
+        if(this.state.user && this.state.user.is){
+            this.setState({
+                show_input_box: true
+            })
+        }
     }
 
     disable_input_box = () => {
@@ -142,13 +145,26 @@ export default class Home extends Component {
         })
     }
 
+    add_string_to_node = (text, id) => {
+        this.state.user.get('said').set({text: text});
+        console.log("added to gun: ", text)
+    }
+
+    add_string_to_UI = (text, id) => {
+        this.setState({
+            said: [...this.state.said, {text: text}]
+        })
+        console.log("added to state(UI): ", text)
+    }
+
     get_cards = () => {
-        let said = []
-        for (let i = 0; i <= 30; i++) {
-            said.push(
-                { text: "We are humans, not some kind of animal." }
-            );
-        }
+        //let said = []
+        //for (let i = 0; i <= 30; i++) {
+        //    said.push(
+        //        { text: "We are humans, not some kind of animal." }
+        //    );
+        //}
+        let said = this.state.said
 
         Array.prototype.getRandom = function (cut) {
             var i = Math.floor(Math.random() * this.length);
@@ -166,7 +182,9 @@ export default class Home extends Component {
         said.map((item, index) => {
             if ((index % 3) == 0) {
                 cards.push(
-                    <div class="row justify-content-md-center">
+                    <div className="row justify-content-md-center"
+                        key={String(index)}
+                    >
                         {each_row}
                     </div>
                 )
@@ -179,18 +197,33 @@ export default class Home extends Component {
                     title={item.title}
                     text={item.text}
                     bg_color={color}
+                    key={String(index)}
                 >
                 </MyCard>
             )
         })
 
         cards.push(
-            <div class="row justify-content-md-center">
+            <div className="row justify-content-md-center"
+                key={-1}
+            >
                 {each_row}
             </div>
         )
 
         return cards
+    }
+
+    componentDidMount() {
+        setTimeout(() => {
+            this.state.user.get('said').map().on( (say_item, id) => {
+                if (say_item) {
+                    this.add_string_to_UI(say_item.text, id)
+                }
+                console.log(say_item)
+            }
+            )
+        }, 3000)
     }
 
     render() {
@@ -200,7 +233,7 @@ export default class Home extends Component {
                     {this.get_state().loggedIn ? '' : ''}
                 </p>
 
-                <div class="container">
+                <div className="container">
                     {this.get_cards()}
                     <br />
                 </div>
@@ -213,6 +246,7 @@ export default class Home extends Component {
 
                 <InputWindow
                     show_input_box={this.state.show_input_box}
+                    add_string_to_node={this.add_string_to_node}
                     enable_input_box={this.enable_input_box}
                     disable_input_box={this.disable_input_box}
                 >
