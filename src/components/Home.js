@@ -45,6 +45,11 @@ class InputWindow extends Component {
                         <InputGroup>
                             <FormControl autoFocus as="textarea"
                                 onChange={ this.handle_input }
+                                onKeyPress={event => {
+                                    if (event.ctrlKey && event.key === "Enter") {
+                                        this.handle_send()
+                                    }
+                                }}
                             />
                         </InputGroup>
                     </Modal.Body>
@@ -101,10 +106,16 @@ class MyCard extends Component {
                     <Card.Header>{this.props.header}</Card.Header>
                     <Card.Body>
                         <Card.Text>
-                            {this.props.text}
+                            { this.props.text.split?
+                                    this.props.text.split("\n").map((i,key) => {
+                                        return <p key={key}>{i}</p>;
+                                    })
+                                    :
+                                    this.props.text
+                            }
                         </Card.Text>
-                        <br />
                         {
+                            //<br />
                             //<ThumbUpIcon style={{ marginRight: "28%" }}>up</ThumbUpIcon>
                             //<ThumbDownIcon>down</ThumbDownIcon>
                         }
@@ -124,9 +135,13 @@ export default class Home extends Component {
 
         this.state = {
             said: [
-                { text: "We are humans, not some kind of animal." }
+                {
+                    text: "We are humans, not some kind of animal.",
+                    date: new Date(1998, 3, 29)
+                }
             ],
             show_input_box: false,
+            gun: this.props.gun,
             user: this.props.user,
         }
     }
@@ -136,6 +151,8 @@ export default class Home extends Component {
             this.setState({
                 show_input_box: true
             })
+        } else {
+            this.props.history.push("/login")
         }
     }
 
@@ -146,25 +163,30 @@ export default class Home extends Component {
     }
 
     add_string_to_node = (text, id) => {
-        this.state.user.get('said').set({text: text});
         console.log("added to gun: ", text)
+        this.state.user.get('said').set({
+            text: text,
+            date: Date()
+        });
     }
 
-    add_string_to_UI = (text, id) => {
+    add_saying_to_UI = (saying, id) => {
+        console.log("added to state(UI): ", saying)
         this.setState({
-            said: [...this.state.said, {text: text}]
+            said: [...this.state.said, saying]
         })
-        console.log("added to state(UI): ", text)
     }
 
     get_cards = () => {
-        //let said = []
-        //for (let i = 0; i <= 30; i++) {
-        //    said.push(
-        //        { text: "We are humans, not some kind of animal." }
-        //    );
-        //}
         let said = this.state.said
+
+        said = said.sort(function(a,b){
+            if (new Date(a.date) > new Date(b.date)) return -1;
+            if (new Date(a.date) < new Date(b.date)) return 1;
+            return 0;
+        });
+
+        //said = said.reverse()
 
         Array.prototype.getRandom = function (cut) {
             var i = Math.floor(Math.random() * this.length);
@@ -178,13 +200,10 @@ export default class Home extends Component {
 
         let cards = []
         let each_row = []
-        //this.state.said.map((item) => {
         said.map((item, index) => {
             if ((index % 3) == 0) {
                 cards.push(
-                    <div className="row justify-content-md-center"
-                        key={String(index)}
-                    >
+                    <div className="row justify-content-md-center">
                         {each_row}
                     </div>
                 )
@@ -197,16 +216,13 @@ export default class Home extends Component {
                     title={item.title}
                     text={item.text}
                     bg_color={color}
-                    key={String(index)}
                 >
                 </MyCard>
             )
         })
 
         cards.push(
-            <div className="row justify-content-md-center"
-                key={-1}
-            >
+            <div className="row justify-content-md-center">
                 {each_row}
             </div>
         )
@@ -215,15 +231,22 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        setTimeout(() => {
+        this.state.gun.on("auth", () => {
+            console.log("user verified")
+
+            //this.state.user.get('said').put(null)
+            //return
+
             this.state.user.get('said').map().on( (say_item, id) => {
-                if (say_item) {
-                    this.add_string_to_UI(say_item.text, id)
+                console.log("node updating")
+                if (say_item && !this.state.said.includes(say_item)) {
+                    if (Object.keys(say_item).includes("date") && Object.keys(say_item).includes("text")) {
+                        this.add_saying_to_UI(say_item, id)
+                    }
                 }
-                console.log(say_item)
             }
             )
-        }, 3000)
+        })
     }
 
     render() {

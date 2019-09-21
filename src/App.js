@@ -29,7 +29,7 @@ class Logout extends Component {
 
         setTimeout(() => {
             window.location = "/"
-        }, 3000)
+        }, 1500)
     }
 
     render() {
@@ -153,6 +153,7 @@ class App extends Component {
                         render={(props) =>
                             <Home
                                 {...props}
+                                gun={gun}
                                 user={user}
                                 get_state={this.get_state}
                                 set_state={this.set_state}

@@ -39,7 +39,8 @@ export default class Login extends Component {
                     loggedIn: true
                 })
                 alert("Sign In successfully!")
-                this.props.history.push("/")
+                //this.props.history.push("/")
+                window.location = "/"
             } else if ("err" in acknowledgment) {
                 alert(acknowledgment.err)
             }
