@@ -237,15 +237,18 @@ export default class Home extends Component {
             //this.state.user.get('said').put(null)
             //return
 
-            this.state.user.get('said').map().on( (say_item, id) => {
-                console.log("node updating")
-                if (say_item && !this.state.said.includes(say_item)) {
-                    if (Object.keys(say_item).includes("date") && Object.keys(say_item).includes("text")) {
-                        this.add_saying_to_UI(say_item, id)
+            this.state.gun.get("users_public_key").map().on( (public_key) => {
+                console.log(public_key)
+                this.state.gun.user(public_key).once(console.log)
+                this.state.gun.user(public_key).get("said").map().on( (say_item, id) => {
+                    console.log("node updating")
+                    if (say_item && !this.state.said.includes(say_item)) {
+                        if (Object.keys(say_item).includes("date") && Object.keys(say_item).includes("text")) {
+                            this.add_saying_to_UI(say_item, id)
+                        }
                     }
-                }
-            }
-            )
+                })
+            })
         })
     }
 

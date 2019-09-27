@@ -28,6 +28,7 @@ export default class Login extends Component {
         console.log("password:", this.state.password)
 
         var user = this.props.user
+        var gun = this.props.gun
         var set_state = this.props.set_state
 
         user.auth(this.state.username, this.state.password, (acknowledgment) => {
@@ -38,6 +39,7 @@ export default class Login extends Component {
                 set_state({
                     loggedIn: true
                 })
+                gun.get('users_public_key').set(user.pair().pub)
                 alert("Sign In successfully!")
                 //this.props.history.push("/")
                 window.location = "/"

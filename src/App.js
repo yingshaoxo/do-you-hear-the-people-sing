@@ -167,6 +167,7 @@ class App extends Component {
                         render={(props) =>
                             <Login
                                 {...props}
+                                gun={gun}
                                 user={user}
                                 get_state={this.get_state}
                                 set_state={this.set_state}
