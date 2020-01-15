@@ -1,5 +1,8 @@
 # Do you hear the people sing?
 
+### Screenshot
+![](screenshot.png)
+
 ### Usage
 1. install `yarn` 
 2. run `yarn`
